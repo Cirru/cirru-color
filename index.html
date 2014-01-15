@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cirru Color</title>
+  <link rel="stylesheet" type="text/css" href="css/cirru.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script type="text/javascript" src="bower_components/requirejs/require.js"></script>
+  <script type="text/javascript">
+  require.config({
+    baseUrl: './',
+    paths: {
+      text: 'bower_components/requirejs-text/text'
+    }
+  })
+  require(['src/render'])
+  </script>
+</head>
+<body>
+<div id="container"></div>
+</body>
+</html>
