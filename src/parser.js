@@ -11,22 +11,20 @@
       var last;
       last = this.list[this.list.length - 1];
       if (last == null) {
-        new Error('Empty state list');
+        throw new Error('Empty state list');
       }
       return last;
     };
 
     State.prototype.push = function(state) {
+      console.log('push state:', state, '->>', this.list);
       return this.list.push(state);
     };
 
-    State.prototype.pop = function(n) {
-      n || (n = 1);
-      while (n > 0) {
-        this.list.pop();
-        n -= 1;
-      }
-      return n;
+    State.prototype.pop = function(message) {
+      var state;
+      state = this.list.pop();
+      return console.log('pop state:', state, '->>', this.list, message);
     };
 
     return State;
@@ -34,17 +32,18 @@
   })();
 
   tokenize = function(line) {
-    var count, isDollar, isFunc, isPara, isWhitespace, ret, rules, state;
+    var collection, count, isClose, isDollar, isEscape, isEscapeContent, isFunc, isFuncClose, isOpen, isPara, isString, isStringContent, isStringEnd, isWhitespace, rules, state;
     state = new State;
-    ret = [];
+    collection = [];
+    console.group('tokenize');
     isWhitespace = function() {
       var whitespace;
       if (whitespace = line.match(/^\s+/)) {
-        ret.push({
-          text: whitespace[0],
-          type: 'whitespace'
+        collection.push({
+          type: 'whitespace',
+          text: whitespace[0]
         });
-        line = line.slice(whitespace.length);
+        line = line.slice(whitespace[0].length);
         return true;
       } else {
         return false;
@@ -52,12 +51,13 @@
     };
     isFunc = function() {
       var func;
-      if (func = line.match(/^\w[^\"\(\)\$]/)) {
-        ret.push({
-          text: func[0],
-          type: 'func'
+      if (func = line.match(/^[^\"\(\)\$\s]+\b/)) {
+        collection.push({
+          type: 'func',
+          text: func[0]
         });
-        line = line.slice(func);
+        state.pop('func end');
+        line = line.slice(func[0].length);
         return true;
       } else {
         return false;
@@ -65,12 +65,12 @@
     };
     isPara = function() {
       var para;
-      if (para = line.match(/^\w[^\"\(\)\$]/)) {
-        ret.push({
-          text: para[0],
-          type: 'para'
+      if (para = line.match(/^[^\"\(\)\$\s]+\b/)) {
+        collection.push({
+          type: 'para',
+          text: para[0]
         });
-        line = line.slice(para);
+        line = line.slice(para[0].length);
         return true;
       } else {
         return false;
@@ -78,20 +78,138 @@
     };
     isDollar = function() {
       var dollar;
-      if (dollar = line.slice(0, 2) === '$ ') {
-        ret.push({
-          text: dollar[0],
-          type: 'dollar'
+      if (dollar = line.match(/^\$\b/)) {
+        collection.push({
+          type: 'dollar',
+          text: dollar[0]
         });
         state.push('func');
-        line = line.slice(2);
+        line = line.slice(1);
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isClose = function() {
+      var close;
+      if (close = line.match(/^\)/)) {
+        collection.push({
+          type: 'close',
+          text: ')'
+        });
+        line = line.slice(1);
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isFuncClose = function() {
+      var close;
+      if (close = line.match(/^\)/)) {
+        collection.push({
+          type: 'close',
+          text: ')'
+        });
+        state.pop('close');
+        line = line.slice(1);
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isOpen = function() {
+      var open;
+      if (open = line.match(/^\(/)) {
+        collection.push({
+          type: 'open',
+          text: '('
+        });
+        line = line.slice(1);
+        state.push('func');
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isString = function() {
+      var open;
+      if (open = line.match(/^\"\b/)) {
+        collection.push({
+          type: 'punc',
+          text: '"'
+        });
+        line = line.slice(1);
+        state.push('string');
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isStringContent = function() {
+      var content;
+      if (content = line.match(/^[^\"\\]+/)) {
+        collection.push({
+          type: 'string',
+          text: content[0]
+        });
+        line = line.slice(content[0].length);
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isEscape = function() {
+      var punc;
+      if (punc = line[0] === '\\') {
+        collection.push({
+          type: 'escape',
+          text: '\\'
+        });
+        line = line.slice(1);
+        state.push('escape');
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isEscapeContent = function() {
+      var content;
+      if ((content = line[0]) != null) {
+        collection.push({
+          type: 'escapeContent',
+          text: content
+        });
+        line = line.slice(1);
+        state.pop('escape end');
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isStringEnd = function() {
+      var content;
+      if (content = line.match(/^\"\b/)) {
+        collection.push({
+          type: 'punc',
+          content: '"'
+        });
+        line = line.slice(1);
+        state.pop('string end');
         return true;
       } else {
         return false;
       }
     };
     rules = {
-      string: function() {},
+      string: function() {
+        if (isEscape()) {
+          return;
+        }
+        if (isStringContent()) {
+          return;
+        }
+        return new Error("not in string grammar: >>>" + line + "<<<");
+      },
       func: function() {
         if (isWhitespace()) {
           return;
@@ -100,23 +218,53 @@
           return;
         }
         if (isDollar()) {
-
+          return;
         }
+        if (isFuncClose()) {
+          return;
+        }
+        if (isOpen()) {
+          return;
+        }
+        return new Error("not in func grammar: >>>" + line + "<<<");
       },
-      para: function() {},
-      escape: function() {},
-      line: function() {}
+      escape: function() {
+        if (isEscapeContent) {
+          return;
+        }
+        return new Error("not in escape grammar: >>>" + line + "<<<");
+      },
+      line: function() {
+        if (isWhitespace()) {
+          return;
+        }
+        if (isPara()) {
+          return;
+        }
+        if (isOpen()) {
+          return;
+        }
+        if (isClose()) {
+          return;
+        }
+        if (isDollar()) {
+          return;
+        }
+        return new Error("not in line grammar: >>>" + line + "<<<");
+      }
     };
     count = 0;
+    console.log('state is:', state.list, line);
     while (line.length > 0) {
       rules[state.get()]();
       count += 1;
       if (count > 400) {
-        console.warn('failed');
+        console.warn("failed at line: >>>" + line + "<<< when >>>" + (state.get()) + "<<<");
         break;
       }
     }
-    return ret;
+    console.groupEnd('tokenize');
+    return collection;
   };
 
   define(function(require, exports) {
