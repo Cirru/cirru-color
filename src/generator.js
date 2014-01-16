@@ -2,11 +2,18 @@
 (function() {
   define(function(require, exports) {
     return function(code) {
-      var parser, result;
+      var html, parser, result;
       parser = require('src/parser');
       result = parser(code);
       console.log('result:', result);
-      return 'return from generator';
+      html = result.map(function(line) {
+        var lineHtml;
+        lineHtml = line.map(function(obj) {
+          return "<span class='" + obj.type + "'>" + obj.text + "</span>";
+        }).join('');
+        return "<span class='cirru-line'>" + lineHtml + "</span>";
+      }).join('<br>');
+      return "<pre class='cirru-color'><code>" + html + "</code></pre>";
     };
   });
 

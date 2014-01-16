@@ -1,0 +1,39 @@
+
+.cirru-color {
+    background-color: hsl(271, 100%, 95%);
+    padding: 0px 10px;
+    counter-reset: cirru-color;
+}
+.cirru-color .cirru-line {
+  counter-increment: cirru-color;
+}
+.cirru-color .cirru-line:before {
+  content: counter(cirru-color);
+  color: hsl(0, 79%, 81%);
+  padding-right: 12px;
+}
+.cirru-color .func {
+    color: blue;
+}
+.cirru-color .string {
+    color: hsl(60, 45%, 55%);
+}
+.cirru-color .para {
+    color: gray;
+}
+.cirru-color .punc {}
+.cirru-color .string-text {
+    color: hsl(60, 41%, 51%);
+}
+.cirru-color .whitespace {}
+.cirru-color .dollar {
+    color: purple;
+}
+.cirru-color .escape {
+    color: hsl(0, 87%, 69%);
+}
+.cirru-color .escape-text {
+    color: red;
+}
+.cirru-color {}
+.cirru-color {}

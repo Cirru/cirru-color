@@ -94,7 +94,7 @@
       var close;
       if (close = line.match(/^\)/)) {
         collection.push({
-          type: 'close',
+          type: 'punc',
           text: ')'
         });
         line = line.slice(1);
@@ -107,7 +107,7 @@
       var close;
       if (close = line.match(/^\)/)) {
         collection.push({
-          type: 'close',
+          type: 'punc',
           text: ')'
         });
         state.pop('close');
@@ -121,7 +121,7 @@
       var open;
       if (open = line.match(/^\(/)) {
         collection.push({
-          type: 'open',
+          type: 'punc',
           text: '('
         });
         line = line.slice(1);
@@ -135,7 +135,7 @@
       var open;
       if (open = line.match(/^\"\b/)) {
         collection.push({
-          type: 'punc',
+          type: 'string',
           text: '"'
         });
         line = line.slice(1);
@@ -149,7 +149,7 @@
       var open;
       if (open = line.match(/^\"\b/)) {
         collection.push({
-          type: 'punc',
+          type: 'string',
           text: '"'
         });
         line = line.slice(1);
@@ -164,7 +164,7 @@
       var content;
       if (content = line.match(/^[^\"\\]+/)) {
         collection.push({
-          type: 'string',
+          type: 'string-text',
           text: content[0]
         });
         line = line.slice(content[0].length);
@@ -191,7 +191,7 @@
       var content;
       if ((content = line[0]) != null) {
         collection.push({
-          type: 'escapeContent',
+          type: 'escape-text',
           text: content
         });
         line = line.slice(1);
@@ -205,7 +205,7 @@
       var content;
       if ((content = line[0]) === '"') {
         collection.push({
-          type: 'punc',
+          type: 'string',
           text: '"'
         });
         line = line.slice(1);

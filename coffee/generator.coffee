@@ -4,4 +4,11 @@ define (require, exports) -> (code) ->
 
   result = parser code
   console.log 'result:', result
-  'return from generator'
+  html = result.map (line) ->
+    lineHtml = line.map (obj) ->
+      "<span class='#{obj.type}'>#{obj.text}</span>"
+    .join ''
+    "<span class='cirru-line'>#{lineHtml}</span>"
+  .join '<br>'
+
+  "<pre class='cirru-color'><code>#{html}</code></pre>"

@@ -50,14 +50,14 @@ tokenize = (line) ->
 
   isClose = ->
     if close = line.match /^\)/
-      collection.push type: 'close', text: ')'
+      collection.push type: 'punc', text: ')'
       line = line[1..]
       true
     else false
 
   isFuncClose = ->
     if close = line.match /^\)/
-      collection.push type: 'close', text: ')'
+      collection.push type: 'punc', text: ')'
       state.pop 'close'
       line = line[1..]
       true
@@ -65,7 +65,7 @@ tokenize = (line) ->
 
   isOpen = ->
     if open = line.match /^\(/
-      collection.push type: 'open', text: '('
+      collection.push type: 'punc', text: '('
       line = line[1..]
       state.push 'func'
       true
@@ -73,7 +73,7 @@ tokenize = (line) ->
 
   isString = ->
     if open = line.match /^\"\b/
-      collection.push type: 'punc', text: '"'
+      collection.push type: 'string', text: '"'
       line = line[1..]
       state.push 'string'
       true
@@ -81,7 +81,7 @@ tokenize = (line) ->
 
   isFuncString = ->
     if open = line.match /^\"\b/
-      collection.push type: 'punc', text: '"'
+      collection.push type: 'string', text: '"'
       line = line[1..]
       state.pop 'func string'
       state.push 'string'
@@ -90,7 +90,7 @@ tokenize = (line) ->
 
   isStringContent = ->
     if content = line.match /^[^\"\\]+/
-      collection.push type: 'string', text: content[0]
+      collection.push type: 'string-text', text: content[0]
       line = line[content[0].length..]
       true
     else false
@@ -105,7 +105,7 @@ tokenize = (line) ->
 
   isEscapeContent = ->
     if (content = line[0])?
-      collection.push type: 'escapeContent', text: content
+      collection.push type: 'escape-text', text: content
       line = line[1..]
       state.pop 'escape end'
       true
@@ -113,7 +113,7 @@ tokenize = (line) ->
 
   isStringEnd = ->
     if (content = line[0]) is '"'
-      collection.push type: 'punc', text: '"'
+      collection.push type: 'string', text: '"'
       line = line[1..]
       state.pop 'string end'
       true
