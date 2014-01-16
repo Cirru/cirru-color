@@ -3,6 +3,8 @@
     background-color: hsl(271, 100%, 95%);
     padding: 0px 10px;
     counter-reset: cirru-color;
+    font-family: Monaco;
+    line-height: 22px;
 }
 .cirru-color .cirru-line {
   counter-increment: cirru-color;
@@ -21,13 +23,15 @@
 .cirru-color .para {
     color: gray;
 }
-.cirru-color .punc {}
+.cirru-color .punc {
+    color: hsl(262, 100%, 86%);
+}
 .cirru-color .string-text {
     color: hsl(60, 41%, 51%);
 }
 .cirru-color .whitespace {}
 .cirru-color .dollar {
-    color: purple;
+    color: hsl(300, 100%, 73%);
 }
 .cirru-color .escape {
     color: hsl(0, 87%, 69%);
