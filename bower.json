@@ -6,7 +6,7 @@
     "jiyinyiyong <jiyinyiyong@gmail.com>"
   ],
   "description": "Pygments inspired syntax highlighting for Cirru",
-  "main": "src/generator.js",
+  "main": "src/parser.js",
   "keywords": [
     "cirru",
     "syntax",

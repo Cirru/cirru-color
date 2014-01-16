@@ -5,7 +5,6 @@
       var html, parser, result;
       parser = require('src/parser');
       result = parser(code);
-      console.log('result:', result);
       html = result.map(function(line) {
         var lineHtml;
         lineHtml = line.map(function(obj) {

@@ -17,14 +17,12 @@
     };
 
     State.prototype.push = function(state) {
-      console.log('push state:', state, '->>', this.list);
       return this.list.push(state);
     };
 
     State.prototype.pop = function(message) {
       var state;
-      state = this.list.pop();
-      return console.log('pop state:', state, '->>', this.list, message);
+      return state = this.list.pop();
     };
 
     return State;
@@ -32,10 +30,9 @@
   })();
 
   tokenize = function(line) {
-    var collection, count, isClose, isDollar, isEscape, isEscapeContent, isFunc, isFuncClose, isFuncString, isOpen, isPara, isString, isStringContent, isStringEnd, isWhitespace, rules, state;
+    var collection, count, isClose, isDollar, isDollarClose, isEscape, isEscapeContent, isFunc, isFuncClose, isFuncString, isOpen, isPara, isString, isStringContent, isStringEnd, isWhitespace, rules, state;
     state = new State;
     collection = [];
-    console.group('tokenize');
     isWhitespace = function() {
       var whitespace;
       if (whitespace = line.match(/^\s+/)) {
@@ -83,7 +80,7 @@
           type: 'dollar',
           text: dollar
         });
-        state.push('func');
+        state.push('dollar');
         line = line.slice(1);
         return true;
       } else {
@@ -110,6 +107,21 @@
           type: 'punc',
           text: ')'
         });
+        state.pop('close');
+        line = line.slice(1);
+        return true;
+      } else {
+        return false;
+      }
+    };
+    isDollarClose = function() {
+      var close;
+      if (close = line.match(/^\)/)) {
+        collection.push({
+          type: 'punc',
+          text: ')'
+        });
+        state.pop('close dollar');
         state.pop('close');
         line = line.slice(1);
         return true;
@@ -249,6 +261,27 @@
         }
         return new Error("not in func grammar: >>>" + line + "<<<");
       },
+      dollar: function() {
+        if (isWhitespace()) {
+          return;
+        }
+        if (isFunc()) {
+          return;
+        }
+        if (isDollar()) {
+          return;
+        }
+        if (isDollarClose()) {
+          return;
+        }
+        if (isOpen()) {
+          return;
+        }
+        if (isFuncString()) {
+          return;
+        }
+        return new Error("not in func grammar: >>>" + line + "<<<");
+      },
       escape: function() {
         if (isEscapeContent()) {
           return;
@@ -278,7 +311,6 @@
       }
     };
     count = 0;
-    console.log('state is:', state.list, line);
     while (line.length > 0) {
       rules[state.get()]();
       count += 1;
@@ -287,7 +319,6 @@
         break;
       }
     }
-    console.groupEnd('tokenize');
     return collection;
   };
 

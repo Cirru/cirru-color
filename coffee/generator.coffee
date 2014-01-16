@@ -3,7 +3,7 @@ define (require, exports) -> (code) ->
   parser = require 'src/parser'
 
   result = parser code
-  console.log 'result:', result
+  # console.log 'result:', result
   html = result.map (line) ->
     lineHtml = line.map (obj) ->
       "<span class='#{obj.type}'>#{obj.text}</span>"

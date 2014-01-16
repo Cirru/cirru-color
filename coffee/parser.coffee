@@ -7,16 +7,16 @@ class State
     throw new Error 'Empty state list' unless last?
     last
   push: (state) ->
-    console.log 'push state:', state, '->>', @list
+    # console.log 'push state:', state, '->>', @list
     @list.push state
   pop: (message) ->
     state = @list.pop()
-    console.log 'pop state:', state, '->>', @list, message
+    # console.log 'pop state:', state, '->>', @list, message
 
 tokenize = (line) ->
   state = new State
   collection = []
-  console.group 'tokenize'
+  # console.group 'tokenize'
 
   isWhitespace = ->
     if whitespace = line.match /^\s+/
@@ -43,7 +43,7 @@ tokenize = (line) ->
   isDollar = ->
     if (dollar = line[0]) is '$'
       collection.push type: 'dollar', text: dollar
-      state.push 'func'
+      state.push 'dollar'
       line = line[1..]
       true
     else false
@@ -58,6 +58,15 @@ tokenize = (line) ->
   isFuncClose = ->
     if close = line.match /^\)/
       collection.push type: 'punc', text: ')'
+      state.pop 'close'
+      line = line[1..]
+      true
+    else false
+
+  isDollarClose = ->
+    if close = line.match /^\)/
+      collection.push type: 'punc', text: ')'
+      state.pop 'close dollar'
       state.pop 'close'
       line = line[1..]
       true
@@ -133,6 +142,14 @@ tokenize = (line) ->
       return if isOpen()
       return if isFuncString()
       new Error "not in func grammar: >>>#{line}<<<"
+    dollar: ->
+      return if isWhitespace()
+      return if isFunc()
+      return if isDollar()
+      return if isDollarClose()
+      return if isOpen()
+      return if isFuncString()
+      new Error "not in func grammar: >>>#{line}<<<"
     escape: ->
       return if isEscapeContent()
       new Error "not in escape grammar: >>>#{line}<<<"
@@ -146,7 +163,7 @@ tokenize = (line) ->
       new Error "not in line grammar: >>>#{line}<<<"
 
   count = 0
-  console.log('state is:', state.list, line)
+  # console.log('state is:', state.list, line)
   while line.length > 0
     rules[state.get()]()
     count += 1
@@ -154,7 +171,7 @@ tokenize = (line) ->
       console.warn "failed at line: >>>#{line}<<< when >>>#{state.get()}<<<"
       break
 
-  console.groupEnd 'tokenize'
+  # console.groupEnd 'tokenize'
   collection
 
 define (require, exports) -> (code) ->
