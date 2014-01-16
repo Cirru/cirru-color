@@ -32,7 +32,7 @@
   })();
 
   tokenize = function(line) {
-    var collection, count, isClose, isDollar, isEscape, isEscapeContent, isFunc, isFuncClose, isOpen, isPara, isString, isStringContent, isStringEnd, isWhitespace, rules, state;
+    var collection, count, isClose, isDollar, isEscape, isEscapeContent, isFunc, isFuncClose, isFuncString, isOpen, isPara, isString, isStringContent, isStringEnd, isWhitespace, rules, state;
     state = new State;
     collection = [];
     console.group('tokenize');
@@ -51,7 +51,7 @@
     };
     isFunc = function() {
       var func;
-      if (func = line.match(/^[^\"\(\)\$\s]+\b/)) {
+      if (func = line.match(/^[^\"\(\)\$\s]+/)) {
         collection.push({
           type: 'func',
           text: func[0]
@@ -65,7 +65,7 @@
     };
     isPara = function() {
       var para;
-      if (para = line.match(/^[^\"\(\)\$\s]+\b/)) {
+      if (para = line.match(/^[^\"\(\)\$\s]+/)) {
         collection.push({
           type: 'para',
           text: para[0]
@@ -78,10 +78,10 @@
     };
     isDollar = function() {
       var dollar;
-      if (dollar = line.match(/^\$\b/)) {
+      if ((dollar = line[0]) === '$') {
         collection.push({
           type: 'dollar',
-          text: dollar[0]
+          text: dollar
         });
         state.push('func');
         line = line.slice(1);
@@ -145,6 +145,21 @@
         return false;
       }
     };
+    isFuncString = function() {
+      var open;
+      if (open = line.match(/^\"\b/)) {
+        collection.push({
+          type: 'punc',
+          text: '"'
+        });
+        line = line.slice(1);
+        state.pop('func string');
+        state.push('string');
+        return true;
+      } else {
+        return false;
+      }
+    };
     isStringContent = function() {
       var content;
       if (content = line.match(/^[^\"\\]+/)) {
@@ -188,10 +203,10 @@
     };
     isStringEnd = function() {
       var content;
-      if (content = line.match(/^\"\b/)) {
+      if ((content = line[0]) === '"') {
         collection.push({
           type: 'punc',
-          content: '"'
+          text: '"'
         });
         line = line.slice(1);
         state.pop('string end');
@@ -203,6 +218,9 @@
     rules = {
       string: function() {
         if (isEscape()) {
+          return;
+        }
+        if (isStringEnd()) {
           return;
         }
         if (isStringContent()) {
@@ -226,10 +244,13 @@
         if (isOpen()) {
           return;
         }
+        if (isFuncString()) {
+          return;
+        }
         return new Error("not in func grammar: >>>" + line + "<<<");
       },
       escape: function() {
-        if (isEscapeContent) {
+        if (isEscapeContent()) {
           return;
         }
         return new Error("not in escape grammar: >>>" + line + "<<<");
@@ -248,6 +269,9 @@
           return;
         }
         if (isDollar()) {
+          return;
+        }
+        if (isString()) {
           return;
         }
         return new Error("not in line grammar: >>>" + line + "<<<");

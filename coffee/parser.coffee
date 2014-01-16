@@ -26,7 +26,7 @@ tokenize = (line) ->
     else false
 
   isFunc = ->
-    if func = line.match /^[^\"\(\)\$\s]+\b/
+    if func = line.match /^[^\"\(\)\$\s]+/
       collection.push type: 'func', text: func[0]
       state.pop 'func end'
       line = line[func[0].length..]
@@ -34,15 +34,15 @@ tokenize = (line) ->
     else false
 
   isPara = ->
-    if para = line.match /^[^\"\(\)\$\s]+\b/
+    if para = line.match /^[^\"\(\)\$\s]+/
       collection.push type: 'para', text: para[0]
       line = line[para[0].length..]
       true
     else false
 
   isDollar = ->
-    if dollar = line.match /^\$\b/
-      collection.push type: 'dollar', text: dollar[0]
+    if (dollar = line[0]) is '$'
+      collection.push type: 'dollar', text: dollar
       state.push 'func'
       line = line[1..]
       true
@@ -79,6 +79,15 @@ tokenize = (line) ->
       true
     else false
 
+  isFuncString = ->
+    if open = line.match /^\"\b/
+      collection.push type: 'punc', text: '"'
+      line = line[1..]
+      state.pop 'func string'
+      state.push 'string'
+      true
+    else false
+
   isStringContent = ->
     if content = line.match /^[^\"\\]+/
       collection.push type: 'string', text: content[0]
@@ -103,8 +112,8 @@ tokenize = (line) ->
     else false
 
   isStringEnd = ->
-    if content = line.match /^\"\b/
-      collection.push type: 'punc', content: '"'
+    if (content = line[0]) is '"'
+      collection.push type: 'punc', text: '"'
       line = line[1..]
       state.pop 'string end'
       true
@@ -113,6 +122,7 @@ tokenize = (line) ->
   rules =
     string: ->
       return if isEscape()
+      return if isStringEnd()
       return if isStringContent()
       new Error "not in string grammar: >>>#{line}<<<"
     func: ->
@@ -121,9 +131,10 @@ tokenize = (line) ->
       return if isDollar()
       return if isFuncClose()
       return if isOpen()
+      return if isFuncString()
       new Error "not in func grammar: >>>#{line}<<<"
     escape: ->
-      return if isEscapeContent
+      return if isEscapeContent()
       new Error "not in escape grammar: >>>#{line}<<<"
     line: ->
       return if isWhitespace()
@@ -131,6 +142,7 @@ tokenize = (line) ->
       return if isOpen()
       return if isClose()
       return if isDollar()
+      return if isString()
       new Error "not in line grammar: >>>#{line}<<<"
 
   count = 0
