@@ -35,4 +35,8 @@ print (add $ (int 1) (int 2))
 
 print $ unwrap $
   map (a $ int 1) (b $ int 2)
+
+set
+  a $ int 1
+  , b c d
   

@@ -42,7 +42,7 @@ tokenize = (line) ->
 
   isDollar = ->
     if (dollar = line[0]) is '$'
-      collection.push type: 'dollar', text: dollar
+      collection.push type: 'punc', text: dollar
       state.push 'dollar'
       line = line[1..]
       true
@@ -128,6 +128,14 @@ tokenize = (line) ->
       true
     else false
 
+  isComma = ->
+    if (content = line[0]) is ','
+      collection.push type: 'punc', text: ','
+      line = line[1..]
+      state.pop 'just comma'
+      true
+    else false
+
   rules =
     string: ->
       return if isEscape()
@@ -136,6 +144,7 @@ tokenize = (line) ->
       new Error "not in string grammar: >>>#{line}<<<"
     func: ->
       return if isWhitespace()
+      return if isComma()
       return if isFunc()
       return if isDollar()
       return if isFuncClose()
