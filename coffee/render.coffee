@@ -1,9 +1,11 @@
 
-define (require, exports) ->
+{generate} = require './generator'
 
-  generator = require 'src/generator'
-  code = require 'text!cirru/cirru.cirru'
-
-  html = generator code
+req = new XMLHttpRequest
+req.open 'GET', './cirru/cirru.cirru'
+req.onload = ->
+  html = generate req.responseText
 
   document.querySelector('#container').innerHTML = html
+
+req.send()

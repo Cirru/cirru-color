@@ -1,8 +1,11 @@
 
-define (require, exports) -> (code) ->
-  parser = require 'src/parser'
+{parse} = require './parser'
 
-  result = parser code
+exports.parse = parse
+
+exports.generate = (code) ->
+
+  result = parse code
   # console.log 'result:', result
   html = result.map (line) ->
     lineHtml = line.map (obj) ->

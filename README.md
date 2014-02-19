@@ -4,7 +4,7 @@ Cirru Color
 
 Syntax highlighting tool inspired by Pygements
 
-Demo http://repo.jiyinyiyong.me/cirru-color/
+Demo http://repo.tiye.me/cirru-color/
 
 It's mainly based on my [PR on pygments][pr] for adding Cirru highlighting.
 
@@ -13,18 +13,13 @@ It's mainly based on my [PR on pygments][pr] for adding Cirru highlighting.
 ### Usage
 
 ```
-bower install cirru-color
+npm install cirru-color
 ```
 
-`cirru-color` has to be loaded via RequireJS.
-
-`src/parser.js` is the core of the package, it lexes Cirru code in to an array.
-After requiring the `parser`, it returns a function that would lex code.
-
 ```coffee
-define (require, exports) ->
-  parser = require 'cirru-color/src/parser'
-  parser 'string of code'
+{generate, parse} = require 'cirru-color'
+tokens = parse 'cirru code'
+html = generate 'cirru code'
 ```
 
 valid types here are:
@@ -82,6 +77,7 @@ it returns:
     }
   ]
 ]
+```
 
 Colors are defined in `css/cirru.css`
 
