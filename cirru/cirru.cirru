@@ -13,6 +13,11 @@ under c
 
 print $ get c a
 
+string x
+regex ^\s$
+regex "^\\s-\"$"
+sentence this is a string
+
 set c x (int 3)
 print $ get c x
 
@@ -39,4 +44,3 @@ print $ unwrap $
 set
   a $ int 1
   , b c d
-  

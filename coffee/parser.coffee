@@ -81,7 +81,7 @@ tokenize = (line) ->
     else false
 
   isString = ->
-    if open = line.match /^\"\b/
+    if line[0] is '"'
       collection.push type: 'string', text: '"'
       line = line[1..]
       state.push 'string'
@@ -89,7 +89,7 @@ tokenize = (line) ->
     else false
 
   isFuncString = ->
-    if open = line.match /^\"\b/
+    if line[0] is '"'
       collection.push type: 'string', text: '"'
       line = line[1..]
       state.pop 'func string'
