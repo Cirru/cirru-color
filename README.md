@@ -81,7 +81,7 @@ it returns:
 
 Colors are defined in `css/cirru.css`
 
-![](http://cirru.org/pics/cirru-color.png)
+![](http://cirru.qiniudn.com/cirru-color.png)
 
 ### License
 
