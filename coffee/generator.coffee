@@ -14,4 +14,4 @@ exports.generate = (code) ->
     "<span class='cirru-line'>#{lineHtml}</span>"
   .join '<br>'
 
-  "<pre class='cirru-color'><code>#{html}</code></pre>"
+  "<code class=\"cirru-color\">#{html}</code>"

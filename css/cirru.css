@@ -1,23 +1,7 @@
 
-.cirru-color {
-    background-color: hsl(271, 100%, 95%);
-    padding: 0px 10px;
-    counter-reset: cirru-color;
-    font-family: Monaco;
-    line-height: 22px;
-}
-.cirru-color .cirru-line {
-  counter-increment: cirru-color;
-}
-.cirru-color .cirru-line:before {
-  content: counter(cirru-color);
-  color: hsl(0, 79%, 81%);
-  padding-right: 12px;
-}
-
 .cirru-color .whitespace {}
 .cirru-color .func {
-    color: blue;
+    color: #aaf;
 }
 .cirru-color .string {
     color: hsl(60, 45%, 55%);
@@ -26,7 +10,7 @@
     color: gray;
 }
 .cirru-color .punc {
-    color: hsl(262, 100%, 86%);
+    color: hsl(132, 18%, 74%);
 }
 .cirru-color .string-text {
     color: hsl(60, 41%, 51%);
