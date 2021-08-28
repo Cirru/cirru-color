@@ -28,6 +28,7 @@ jobs:
     - name: "compiles to js"
       run: >
         yarn && yarn compile && yarn vite build --base=./
+        && cp -r examples dist/
 
     - name: Deploy to server
       id: deploy

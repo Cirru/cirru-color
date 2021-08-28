@@ -16,10 +16,20 @@ It's mainly based on my [PR on pygments][pr] for adding Cirru highlighting.
 npm install cirru-color
 ```
 
+Highlight code:
+
 ```coffee
-{generate, parse} = require 'cirru-color'
+import {generateHtml} from 'cirru-color'
+html = generateHtml 'cirru code'
+```
+
+Styles in `/assets/cirru.css`.
+
+Or just parsing:
+
+```coffee
+import {parse} from 'cirru-color'
 tokens = parse 'cirru code'
-html = generate 'cirru code'
 ```
 
 valid types here are:
@@ -78,10 +88,6 @@ it returns:
   ]
 ]
 ```
-
-Colors are defined in `css/cirru.css`
-
-![](http://cirru.qiniudn.com/cirru-color.png)
 
 ### License
 
