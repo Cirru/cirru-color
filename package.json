@@ -2,8 +2,10 @@
   "name": "cirru-color",
   "version": "0.2.0",
   "description": "cirru highlighting as HTML",
-  "main": "src/generator.js",
+  "main": "lib/generator.js",
   "scripts": {
+    "watch": "coffee -o lib/ -bcw src",
+    "compile": "coffee -o lib/ -bc src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/Cirru/cirru-color/issues"
   },
-  "homepage": "http://repo.tiye.me/cirru-color"
+  "homepage": "http://repo.tiye.me/cirru-color",
+  "devDependencies": {
+    "coffeescript": "^2.5.1",
+    "vite": "^2.5.1"
+  }
 }

@@ -1,9 +1,9 @@
 
-{parse} = require './parser'
+import {parse} from './parser'
 
-exports.parse = parse
+export {parse}
 
-exports.generate = (code) ->
+export generate = (code) ->
 
   result = parse code
   # console.log 'result:', result
@@ -15,3 +15,5 @@ exports.generate = (code) ->
   .join '<br>'
 
   "<code class=\"cirru-color\">#{html}</code>"
+
+export generateHtml = generate

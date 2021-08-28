@@ -4,15 +4,15 @@ Cirru Color
 
 Syntax highlighting tool inspired by Pygements
 
-Demo http://repo.tiye.me/cirru-color/
+Demo http://repo.cirru.org/cirru-color/
 
 It's mainly based on my [PR on pygments][pr] for adding Cirru highlighting.
 
-[pr]: https://bitbucket.org/birkenfeld/pygments-main/pull-request/275/add-syntax-for-cirru
+[pr]: https://github.com/pygments/pygments/blob/master/pygments/lexers/webmisc.py#L866
 
 ### Usage
 
-```
+```bash
 npm install cirru-color
 ```
 

@@ -2,6 +2,10 @@
 coffee/
 cirru/
 build/
-src/render.js
-calabash.coffee
+
 index.html
+yarn.lock
+
+examples/
+
+dist/
