@@ -1,6 +1,6 @@
 {
   "name": "cirru-color",
-  "version": "0.2.0",
+  "version": "0.2.1-a1",
   "description": "cirru highlighting as HTML",
   "main": "lib/generator.js",
   "scripts": {
