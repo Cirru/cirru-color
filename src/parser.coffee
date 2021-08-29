@@ -183,5 +183,5 @@ tokenize = (line) ->
   # console.groupEnd 'tokenize'
   collection
 
-exports.parse = (code) ->
+export parse = (code) ->
   lines = code.split('\n').map tokenize

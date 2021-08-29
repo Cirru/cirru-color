@@ -4,22 +4,32 @@ Cirru Color
 
 Syntax highlighting tool inspired by Pygements
 
-Demo http://repo.tiye.me/cirru-color/
+Demo http://repo.cirru.org/cirru-color/
 
 It's mainly based on my [PR on pygments][pr] for adding Cirru highlighting.
 
-[pr]: https://bitbucket.org/birkenfeld/pygments-main/pull-request/275/add-syntax-for-cirru
+[pr]: https://github.com/pygments/pygments/blob/master/pygments/lexers/webmisc.py#L866
 
 ### Usage
 
-```
+```bash
 npm install cirru-color
 ```
 
+Highlight code:
+
 ```coffee
-{generate, parse} = require 'cirru-color'
+import {generateHtml} from 'cirru-color'
+html = generateHtml 'cirru code'
+```
+
+Styles in `/assets/cirru.css`.
+
+Or just parsing:
+
+```coffee
+import {parse} from 'cirru-color'
 tokens = parse 'cirru code'
-html = generate 'cirru code'
 ```
 
 valid types here are:
@@ -78,10 +88,6 @@ it returns:
   ]
 ]
 ```
-
-Colors are defined in `css/cirru.css`
-
-![](http://cirru.qiniudn.com/cirru-color.png)
 
 ### License
 

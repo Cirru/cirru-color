@@ -1,4 +1,6 @@
 
-bower_components/
-src/*
-build/
+/lib
+
+node_modules/
+
+/dist
