@@ -165,6 +165,7 @@ tokenize = (line) ->
       new Error "not in string grammar: >>>#{line}<<<"
     func: ->
       return if isIndentation()
+      return if isWhitespace()
       return if isComma()
       return if isKeyword()
       return if isNumber()
@@ -204,7 +205,7 @@ tokenize = (line) ->
     rules[state.get()]()
     count += 1
     if count > 400
-      console.warn "failed at line: >>>#{line}<<< when >>>#{state.get()}<<<"
+      console.warn "failed at line: #{JSON.stringify(line)} when >>>#{state.get()}<<<"
       break
 
   # console.groupEnd 'tokenize'
