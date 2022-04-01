@@ -18,10 +18,31 @@ tokenize = (line) ->
   collection = []
   # console.group 'tokenize'
 
+  isIndentation = ->
+    if whitespace = line.match /^\s\s/
+      collection.push type: 'indentation', text: whitespace[0]
+      line = line[2..]
+      true
+    else false
+
   isWhitespace = ->
     if whitespace = line.match /^\s+/
       collection.push type: 'whitespace', text: whitespace[0]
       line = line[whitespace[0].length..]
+      true
+    else false
+
+  isKeyword = ->
+    if kwd = line.match /^:\S+/
+      collection.push type: 'keyword', text: kwd[0]
+      line = line[kwd[0].length..]
+      true
+    else false
+
+  isNumber = ->
+    if number = line.match /^-?(\d+)(\.(\d*))?/
+      collection.push type: 'number', text: number[0]
+      line = line[number[0].length..]
       true
     else false
 
@@ -143,8 +164,10 @@ tokenize = (line) ->
       return if isStringContent()
       new Error "not in string grammar: >>>#{line}<<<"
     func: ->
-      return if isWhitespace()
+      return if isIndentation()
       return if isComma()
+      return if isKeyword()
+      return if isNumber()
       return if isFunc()
       return if isDollar()
       return if isFuncClose()
@@ -153,6 +176,7 @@ tokenize = (line) ->
       new Error "not in func grammar: >>>#{line}<<<"
     dollar: ->
       return if isWhitespace()
+      return if isKeyword()
       return if isFunc()
       return if isDollar()
       return if isDollarClose()
@@ -163,6 +187,9 @@ tokenize = (line) ->
       return if isEscapeContent()
       new Error "not in escape grammar: >>>#{line}<<<"
     line: ->
+      return if isIndentation()
+      return if isKeyword()
+      return if isNumber()
       return if isWhitespace()
       return if isPara()
       return if isOpen()

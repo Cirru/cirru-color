@@ -3,3 +3,9 @@ body {
     margin: 0;
     padding: 20px;
 }
+
+code {
+    font-family: Source Code Pro, Menlo, monospace;
+    font-size: 13px;
+    line-height: 18px;
+}
