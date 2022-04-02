@@ -1,11 +1,8 @@
 
 import {generate} from './generator'
 
-req = new XMLHttpRequest
-req.open 'GET', './examples/cirru.cirru'
-req.onload = ->
-  html = generate req.responseText
-
+fetch("./examples/cirru.cirru")
+.then (res) -> res.text()
+.then (text) ->
+  html = generate text
   document.querySelector('#container').innerHTML = html
-
-req.send()

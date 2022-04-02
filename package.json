@@ -1,6 +1,6 @@
 {
   "name": "cirru-color",
-  "version": "0.2.1-a1",
+  "version": "0.2.3",
   "description": "cirru highlighting as HTML",
   "main": "lib/generator.js",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "homepage": "http://repo.tiye.me/cirru-color",
   "devDependencies": {
-    "coffeescript": "^2.5.1",
-    "vite": "^2.5.1"
+    "coffeescript": "^2.6.1",
+    "vite": "^2.9.1"
   }
 }
