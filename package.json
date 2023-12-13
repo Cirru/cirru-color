@@ -1,11 +1,12 @@
 {
   "name": "cirru-color",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "cirru highlighting as HTML",
-  "main": "lib/generator.js",
+  "main": "lib/generator.mjs",
   "scripts": {
     "watch": "coffee -o lib/ -bcw src",
-    "compile": "coffee -o lib/ -bc src",
+    "compile": "coffee -o lib/ -bc src && yarn rename",
+    "rename": "node script/rename.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +23,7 @@
   },
   "homepage": "http://repo.tiye.me/cirru-color",
   "devDependencies": {
-    "coffeescript": "^2.6.1",
-    "vite": "^2.9.1"
+    "coffeescript": "^2.7.0",
+    "vite": "^5.0.6"
   }
 }
